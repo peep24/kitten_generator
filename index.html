@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitten Generator</title>
+    <link rel="stylesheet" href="style.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gaegu&display=swap" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+    <style>
+        body {
+        background: rgb(131,58,180);
+        background: linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%);
+
+
+        }
+
+        h1 {
+            width: 20%;
+            margin: 50px auto;
+            font-size: 40px;
+            font-family: 'Gaegu', cursive;
+            text-align: center;
+        }
+
+        .kittens {
+            display: flex;
+            margin: 20px;
+        }
+
+        .indi_kitten {
+            margin: 10px;  
+        }
+
+        #new_kitty {
+            margin: auto;
+            width: 300px;
+        }
+
+        #yourName {
+            width: 300px;
+            margin: 50px auto;
+        }
+
+        input[type=submit] {
+            margin: 20px 0;
+        }
+
+        .indi_kitten {
+            background-color: rgba(255,255,255,0.3);
+            width: 300px;
+            height: auto;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            font-family: 'Gaegu', cursive;
+
+        }
+
+        .indi_kitten .image {
+            position: relative;
+            width: 90%;
+            height: 300px;
+            background-repeat: no-repeat;
+            background-size: cover;
+            margin: 20px auto;
+            border-radius: 10px;
+        }
+
+        .indi_kitten ul {
+            list-style: none;
+            font-size: 30px;
+
+        }
+
+        .indi_kitten button {
+            justify-self: center;
+
+        }
+    </style>
+
+</head>
+<body>
+    <h1>Your Name</h1>
+    <input id="yourName" class="form-control" type="text" placeholder="Your Name">
+
+    <h1>Create Kitty</h1>
+    <form id="new_kitty">
+        <div class="form-group">
+            <label for="name">First Name</label>
+            <input type="text" class="form-control" id="kittyFName" required  placeholder="Enter First">
+            <label for="name">Last Name</label>
+            <input type="text" class="form-control" id="kittyLName" required  placeholder="Enter Last">
+        </div>
+        <input class="btn btn-success" type="submit" value="Add Kitty">
+    </form>
+
+    <h1>Your Kittens!</h1>
+
+    <div class="kittens">
+        
+    </div>
+
+ 
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        var kitties = []
+
+function randomIntFromInterval(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min)
+  }
+
+function makeid() {
+let id = '';
+const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+const nums = '0123456789'
+for (let i = 0; i < 2; i++) {
+    id += chars[Math.floor(Math.random() * chars.length) + 1]
+}
+for (let i = 0; i < 3; i++) {
+    id += nums[Math.floor(Math.random() * nums.length) + 1]
+}
+return id
+}  
+
+class kitty {
+    constructor(firstName, lastName) {
+        this.id = makeid()
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.age = randomIntFromInterval(1, 6);
+        this.pettedBy = [];
+        this.health = 100
+        this.numberOfPets = 0
+        this.dead = false
+    }
+
+    pet(petter) {
+
+        if($.inArray(petter, this.pettedBy) > -1) {
+            if (!this.dead) {
+                this.health += 100
+            } 
+            this.numberOfPets++
+        } else if (petter.toLowerCase() === "dan") {
+            this.dead = true
+            this.health = 0
+            this.pettedBy.push(petter)
+            this.numberOfPets ++
+        } else {
+            if (!this.dead) {
+                this.health += 100
+            } 
+            this.pettedBy.push(petter)
+            this.numberOfPets ++
+        }
+
+    }
+
+    sayHello(greeter) {
+        if (greeter.toLowerCase() === "dan") {
+            alert(`meh`)
+        } else {
+            alert(`Meow, My name is ${this.firstName} ${this.lastName}`)
+        }
+    
+    }
+
+    humanAge() {
+        return this.age * 6
+    }
+
+    petCount() {
+        return this.numberOfPets
+    }
+
+    petList() {
+        var pettedBy = []
+        for(const petter of this.pettedBy){
+            pettedBy.push(petter)
+        }
+        return pettedBy
+    }
+
+}  
+
+  $("form").submit(function(e){
+    e.preventDefault()
+    var kittyFirstName = $('#kittyFName').val()
+    var kittyLastName = $('#kittyLName').val()
+    $("form")[0].reset()
+    
+    newKitty = new kitty(kittyFirstName, kittyLastName)
+    kitties.push(newKitty)
+    updateKitties()
+    updateHealth() 
+  });
+
+
+  $(document).on('click', '.petBtn', function () {
+
+    var targetKitty = kitties.filter(obj => {
+        return obj.id === this.id
+      })
+    targetKitty[0].pet($("#yourName").val())
+    console.log(targetKitty)
+    updateKitties()
+});
+
+
+  $(document).on('click', '.helloBtn', function () {
+
+    var targetKitty = kitties.filter(obj => {
+        return obj.id === this.id
+      })
+    targetKitty[0].sayHello($("#yourName").val())
+});
+
+
+
+  function updateKitties() {
+        $(".kittens").html("")
+        for(const kitty of kitties){
+            html = `
+            <div class="indi_kitten">
+                <div class="image" style="background-image: url(https://cataas.com/cat);"></div>
+                <ul>
+                    <li>Name: ${kitty.firstName} ${kitty.lastName}</li>
+                    <li>Age:${kitty.age} (Human age:) ${kitty.humanAge()}</li>
+                    <li>Petted By: ${kitty.petList()}</li>
+                    <li>I have been petted: ${kitty.petCount()} times</li>
+                    <li id="${kitty.id}_status" >Health: <span id="${kitty.id}_health">100%</span>%</li>
+                </ul>
+                <button id="${kitty.id}" class="petBtn btn btn-warning">Pet Kitty</button>
+                <button id="${kitty.id}" class="helloBtn btn btn-info">Say Hello</button>
+            </div>
+            `
+            $(".kittens").append(html)
+      
+        }
+    }
+
+
+
+function updateHealth() {
+    this.loop = function() {
+        for(const kitty of kitties){
+
+            if (kitty.health > 0) {
+                kitty.health += - 0.1
+                $("#" + kitty.id + '_health').html(kitty.health.toFixed(2))
+            } else if (kitty.health <= 0) {
+                $("#" + kitty.id + '_status').html("Your Kitten has died :-(")
+            }
+
+        
+        }
+        requestAnimationFrame(this.loop);
+      }.bind(this);
+      this.loop();
+}
+
+
+
+
+    </script>
+</body>
+</html>

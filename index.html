@@ -251,9 +251,8 @@ class kitty {
     }
 
 
-
+        
 function updateHealth() {
-    this.loop = function() {
         for(const kitty of kitties){
 
             if (kitty.health > 0) {
@@ -265,10 +264,8 @@ function updateHealth() {
 
         
         }
-        requestAnimationFrame(this.loop);
-      }.bind(this);
-      this.loop();
-}
+        requestAnimationFrame(updateHealth);
+}        
 
 
 
